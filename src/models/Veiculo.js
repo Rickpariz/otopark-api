@@ -1,25 +1,22 @@
 const { Schema, model } = require('mongoose');
 
-const UsuarioSchema = new Schema({
-    nome: {
+const VeiculoSchema = new Schema({
+    placa: {
         type: String,
         required: true
     },
-    email: {
+    modelo: {
         type: String,
         required: true
     },
-    senha: {
-        type: String,
-        required: true
-    },
-    tipo: {
+    cor: {
         type: String,
         required: true
     },
     estacionamento: {
-        type: Array
+        type: Schema.Types.ObjectId, ref: 'estacionamentos',
+        required: true
     }
 }, { timestamps: true });
 
-module.exports = model('usuarios', UsuarioSchema);
+module.exports = model('veiculos', VeiculoSchema);

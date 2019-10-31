@@ -1,25 +1,21 @@
 const { Schema, model } = require('mongoose');
 
-const UsuarioSchema = new Schema({
+const ClienteSchema = new Schema({
     nome: {
         type: String,
         required: true
     },
-    email: {
+    rg: {
         type: String,
         required: true
     },
-    senha: {
+    telefone: {
         type: String,
         required: true
     },
-    tipo: {
-        type: String,
-        required: true
-    },
-    estacionamento: {
-        type: Array
+    estacionamento: { 
+        type: Schema.Types.ObjectId, ref: 'estacionamentos', required: true
     }
 }, { timestamps: true });
 
-module.exports = model('usuarios', UsuarioSchema);
+module.exports = model('clientes', ClienteSchema);
