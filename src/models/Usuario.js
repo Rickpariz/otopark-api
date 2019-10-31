@@ -17,9 +17,7 @@ const UsuarioSchema = new Schema({
         type: String,
         required: true
     },
-    estacionamento: {
-        type: Array
-    }
+    status: { type: Boolean, default: true }
 }, { timestamps: true });
 
 module.exports = model('usuarios', UsuarioSchema);
