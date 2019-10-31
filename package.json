@@ -1,0 +1,16 @@
+{
+  "name": "otopark",
+  "version": "1.0.0",
+  "description": "Api rest NodeJs / MongoDB",
+  "main": "index.js",
+  "repository": "https://github.com/Rickpariz/otopark-api.git",
+  "author": "Ricardo Ferreira Pariz Silva <ricardoferreiraparizsilva85@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.7.7"
+  }
+}
