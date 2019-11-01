@@ -13,7 +13,7 @@ const ClienteSchema = new Schema({
         type: String,
         required: true
     },
-    estacionamento: { 
+    estacionamento: {
         type: Schema.Types.ObjectId, ref: 'estacionamentos', required: true
     }
 }, { timestamps: true });
