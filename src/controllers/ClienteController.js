@@ -61,7 +61,7 @@ module.exports = {
                         estacionamento: new mongoose.Types.ObjectId(estacionamento),
                         telefone
                     }
-                }, { new: true });
+                }, { new: true }).exec();
 
             return res.json(clienteAtualizado);
         } catch (err) { res.status(500).send(err.message) }

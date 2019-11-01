@@ -67,7 +67,7 @@ module.exports = {
                         senha: hash,
                         tipo
                     }
-                }, { new: true });
+                }, { new: true }).exec();
 
             return res.json(usuarioAtualizado);
         } catch (err) { res.status(500).send(err.message) }

@@ -13,6 +13,10 @@ const VeiculoSchema = new Schema({
         type: String,
         required: true
     },
+    cliente: {
+        type: Schema.Types.ObjectId, ref: 'clientes',
+        required: true
+    },
     estacionamento: {
         type: Schema.Types.ObjectId, ref: 'estacionamentos',
         required: true
