@@ -4,6 +4,7 @@ const UsuarioController = require('./controllers/UsuarioController');
 const EstacionamentoController = require('./controllers/EstacionamentoController');
 const ClienteController = require('./controllers/ClienteController');
 const VeiculoController = require('./controllers/VeiculoController');
+const Vaga = require('./controllers/VagaController');
 
 // Rotas de Usuários
 routes.get('/usuarios/:usuario', UsuarioController.getOne)
@@ -35,6 +36,14 @@ routes.route('/veiculos')
     .get(VeiculoController.getAll)
     .post(VeiculoController.create)
     .put(VeiculoController.update)
+
+
+// Rotas de Vagas
+routes.get('/vagas/:vaga', Vaga.getOne)
+routes.route('/vagas')
+    .get(Vaga.getAll)
+    .post(Vaga.create)
+    .put(Vaga.update)
 
 
 

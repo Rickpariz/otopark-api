@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose');
 const VagaSchema = new Schema({
     status: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true
     },
     codigo: {
         type: String,
