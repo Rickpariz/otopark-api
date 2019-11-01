@@ -4,8 +4,8 @@ const UsuarioController = require('./controllers/UsuarioController');
 const EstacionamentoController = require('./controllers/EstacionamentoController');
 const ClienteController = require('./controllers/ClienteController');
 const VeiculoController = require('./controllers/VeiculoController');
-const Vaga = require('./controllers/VagaController');
-
+const VagaController = require('./controllers/VagaController');
+const TabelaDePrecoController = require('./controllers/TabelaDePrecoController');
 // Rotas de Usuários
 routes.get('/usuarios/:usuario', UsuarioController.getOne)
 routes.route('/usuarios')
@@ -39,11 +39,19 @@ routes.route('/veiculos')
 
 
 // Rotas de Vagas
-routes.get('/vagas/:vaga', Vaga.getOne)
+routes.get('/vagas/:vaga', VagaController.getOne)
 routes.route('/vagas')
-    .get(Vaga.getAll)
-    .post(Vaga.create)
-    .put(Vaga.update)
+    .get(VagaController.getAll)
+    .post(VagaController.create)
+    .put(VagaController.update)
+
+
+// Rotas de Vagas
+routes.get('/tabeladeprecos/:tabeladepreco', TabelaDePrecoController.getOne)
+routes.route('/tabeladeprecos')
+    .get(TabelaDePrecoController.getAll)
+    .post(TabelaDePrecoController.create)
+    .put(TabelaDePrecoController.update)
 
 
 
