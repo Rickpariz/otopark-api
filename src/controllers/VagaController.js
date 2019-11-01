@@ -44,9 +44,9 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const { vaga, codigo, estacionamento } = req.body;
+            const { vaga, codigo, estacionamento, status } = req.body;
 
-            if (!vaga || !codigo || !estacionamento) {
+            if (!vaga || !codigo || !estacionamento || !status) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
@@ -54,6 +54,7 @@ module.exports = {
                 { _id: new mongoose.Types.ObjectId(vaga) },
                 {
                     $set: {
+                        status: Boolean(status),
                         codigo,
                         estacionamento: new mongoose.Types.ObjectId(estacionamento),
                     }
