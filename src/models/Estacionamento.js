@@ -17,7 +17,11 @@ const EstacionamentoSchema = new Schema({
         type: Number,
         required: true
     },
-    vagas: []
+    vagas: [],
+    status: {
+        type: Boolean,
+        default: true
+    }
 }, { timestamps: true });
 
 module.exports = model('estacionamentos', EstacionamentoSchema);

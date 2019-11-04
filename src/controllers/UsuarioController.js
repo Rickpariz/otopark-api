@@ -27,8 +27,12 @@ module.exports = {
 
     async getAll(req, res) {
         try {
+            const { filters } = req.query;
+            let query = {};
+            
+            if(filters && filters.tipo) query['tipo'] = filters.tipo;
 
-            const usuarios = await Usuario.find().exec();
+            const usuarios = await Usuario.find(query).exec();
             return res.json(usuarios);
 
         } catch (err) { res.status(500).send(err.message) }
@@ -50,13 +54,11 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const { usuario, nome, email, senha, tipo } = req.body;
+            const { usuario, nome, email, tipo } = req.body;
 
-            if (!usuario || !nome || !email || !senha || !tipo) {
+            if (!usuario || !nome || !email || !tipo) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
-
-            const hash = bcrypt.hashSync(senha, salt);
 
             const usuarioAtualizado = await Usuario.findOneAndUpdate(
                 { _id: new mongoose.Types.ObjectId(usuario) },
@@ -64,7 +66,6 @@ module.exports = {
                     $set: {
                         nome,
                         email,
-                        senha: hash,
                         tipo
                     }
                 }, { new: true }).exec();

@@ -6,17 +6,17 @@ module.exports = {
         try {
             const { nome, endereco, funcionarios, dono, numeroDeVagas, vagas } = req.body;
 
-            if (!nome || !endereco || !funcionarios || !dono || !numeroDeVagas || !vagas) {
+            if (!nome || !endereco || !dono || !numeroDeVagas) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
             let estacionamento = await Estacionamento.create({
                 nome,
                 endereco,
-                funcionarios: funcionarios.map(f => new mongoose.Types.ObjectId(f)),
+                funcionarios: funcionarios ? funcionarios.map(f => new mongoose.Types.ObjectId(f)) : [],
                 dono: new mongoose.Types.ObjectId(dono),
                 numeroDeVagas: numeroDeVagas,
-                vagas: vagas.map(v => new mongoose.Types.ObjectId(v))
+                vagas: vagas ? vagas.map(v => new mongoose.Types.ObjectId(v)) : []
             })
 
             estacionamento = await estacionamento.populate('funcionarios').populate('dono').execPopulate();
@@ -27,8 +27,12 @@ module.exports = {
 
     async getAll(req, res) {
         try {
+            const { filters } = req.query;
+            let query = {};
+            
+            if(filters && filters.dono) query['dono'] = new mongoose.Types.ObjectId(filters.dono);
 
-            const estacionamentos = await Estacionamento.find().populate('funcionarios').populate('dono').exec();
+            const estacionamentos = await Estacionamento.find(query).populate('funcionarios').populate('dono').exec();
             return res.json(estacionamentos);
 
         } catch (err) { res.status(500).send(err.message) }
@@ -52,7 +56,7 @@ module.exports = {
         try {
             const { estacionamento, nome, endereco, funcionarios, dono, numeroDeVagas, vagas } = req.body;
 
-            if (!estacionamento || !nome || !endereco || !funcionarios || !dono || !numeroDeVagas || !vagas) {
+            if (!estacionamento || !nome || !endereco || !dono || !numeroDeVagas) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
@@ -62,10 +66,10 @@ module.exports = {
                 $set: {
                     nome,
                     endereco,
-                    funcionarios: funcionarios.map(f => new mongoose.Types.ObjectId(f)),
+                    funcionarios: funcionarios ? funcionarios.map(f => new mongoose.Types.ObjectId(f)) : [],
                     dono: new mongoose.Types.ObjectId(dono),
                     numeroDeVagas: numeroDeVagas,
-                    vagas: vagas.map(v => new mongoose.Types.ObjectId(v))
+                    vagas: vagas ? vagas.map(v => new mongoose.Types.ObjectId(v)) : []
                 }
             }, { new: true }).populate('funcionarios').populate('dono').exec();
 

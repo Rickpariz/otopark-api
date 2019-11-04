@@ -23,8 +23,12 @@ module.exports = {
 
     async getAll(req, res) {
         try {
+            const { filters } = req.query;
+            let query = {};
 
-            const clientes = await Cliente.find().exec();
+            if(filters && filters.estacionamento) query['estacionamento'] = new mongoose.Types.ObjectId(filters.estacionamento);
+
+            const clientes = await Cliente.find(query).exec();
             return res.json(clientes);
 
         } catch (err) { res.status(500).send(err.message) }

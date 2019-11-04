@@ -6,6 +6,8 @@ const ClienteController = require('./controllers/ClienteController');
 const VeiculoController = require('./controllers/VeiculoController');
 const VagaController = require('./controllers/VagaController');
 const TabelaDePrecoController = require('./controllers/TabelaDePrecoController');
+const SistemaController = require('./controllers/SistemaController');
+
 // Rotas de Usuários
 routes.get('/usuarios/:usuario', UsuarioController.getOne)
 routes.route('/usuarios')
@@ -53,6 +55,8 @@ routes.route('/tabeladeprecos')
     .post(TabelaDePrecoController.create)
     .put(TabelaDePrecoController.update)
 
+// rotas do Sistema
+routes.post('/system/login', SistemaController.login)
 
 
 module.exports = routes;
