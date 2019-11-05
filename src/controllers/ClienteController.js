@@ -52,7 +52,7 @@ module.exports = {
         try {
             const { cliente, nome, rg, estacionamento, telefone } = req.body;
 
-            if (!cliente || !nome || !rg || !estacionamento || !telefone) {
+            if (!cliente || !nome || !rg || !telefone) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
@@ -62,7 +62,6 @@ module.exports = {
                     $set: {
                         nome,
                         rg,
-                        estacionamento: new mongoose.Types.ObjectId(estacionamento),
                         telefone
                     }
                 }, { new: true }).exec();
