@@ -17,7 +17,10 @@ const EstacionamentoSchema = new Schema({
         type: Number,
         required: true
     },
-    vagas: [],
+    vagas: [{
+        type: Schema.Types.ObjectId,
+        ref: 'vagas'
+    }],
     status: {
         type: Boolean,
         default: true

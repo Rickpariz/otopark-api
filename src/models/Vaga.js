@@ -8,7 +8,8 @@ const VagaSchema = new Schema({
     },
     codigo: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     estacionamento: { 
         type: Schema.Types.ObjectId, ref: 'estacionamentos', required: true

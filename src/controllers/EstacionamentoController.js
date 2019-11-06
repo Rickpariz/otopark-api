@@ -1,6 +1,8 @@
 const Estacionamento = require('../models/Estacionamento');
 const Vaga = require('../models/Vaga');
 const mongoose = require('mongoose');
+const randomstring = require("randomstring");
+const utils = require('../utils');
 
 module.exports = {
     async create(req, res) {
@@ -21,14 +23,18 @@ module.exports = {
             })
 
             let vagas = [];
+            let loops = utils.generateArrayNumber(numeroDeVagas);
 
-            for (let index = 1; index < numeroDeVagas; index++) {
+            for (const loop of loops) {
                 let vaga = await Vaga.create({
-                    codigo: '#' + index,
+                    codigo: randomstring.generate({
+                        length: 4,
+                        charset: '123456789ABCDEF'
+                    }),
                     estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
                 })
 
-                vagas.push(vaga);
+                vagas.push(new mongoose.Types.ObjectId(vaga._id));
             }
 
             estacionamento.vagas = vagas;
@@ -69,29 +75,32 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const { estacionamento, nome, endereco, funcionarios, dono, numeroDeVagas, vagas } = req.body;
+            const { estacionamento, nome, endereco, funcionarios, dono, numeroDeVagas } = req.body;
 
             if (!estacionamento || !nome || !endereco || !dono || !numeroDeVagas) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
-            let esctacionamentoAntigo = await Esctacionamento.findOne({_id: new mongoose.Types.ObjectId(estacionamento)}).exec();
-            let vagas = [];
+            let esctacionamentoAntigo = await Estacionamento.findOne({_id: new mongoose.Types.ObjectId(estacionamento)}).exec();
+            let vagasList = [];
 
             if (numeroDeVagas > esctacionamentoAntigo.numeroDeVagas){
-              let novasVagas = numeroDeVagas - esctacionamentoAntigo.numeroDeVagas
-              
+                let novasVagas = numeroDeVagas - esctacionamentoAntigo.numeroDeVagas
+                let loops = utils.generateArrayNumber(novasVagas);
 
-                for (let index = 1; index < novasVagas; index++) {
+                for (const loop of loops) {
                     let vaga = await Vaga.create({
-                    codigo: '#' + index,
-                    estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
-                })
+                        codigo: randomstring.generate({
+                            length: 4,
+                            charset: '123456789ABCDEF'
+                        }),
+                        estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
+                    })
 
-                vagas.push(vaga);
+                    vagasList.push(new mongoose.Types.ObjectId(vaga._id));
+                }
             }
-
-            }
+            
             let estacionamentoAtualizado = await Estacionamento.findOneAndUpdate({
                 _id: new mongoose.Types.ObjectId(estacionamento)
             }, {
@@ -100,8 +109,10 @@ module.exports = {
                     endereco,
                     funcionarios: funcionarios ? funcionarios.map(f => new mongoose.Types.ObjectId(f)) : [],
                     dono: new mongoose.Types.ObjectId(dono),
-                    numeroDeVagas: numeroDeVagas,
-                    vagas: vagas ? vagas.map(v => new mongoose.Types.ObjectId(v)) : []
+                    numeroDeVagas: numeroDeVagas
+                },
+                $push: {
+                    vagas: vagasList
                 }
             }, { new: true }).populate('funcionarios').populate('dono').exec();
 
