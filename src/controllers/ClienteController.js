@@ -50,7 +50,7 @@ module.exports = {
 
     async update(req, res) {
         try {
-            const { cliente, nome, rg, estacionamento, telefone } = req.body;
+            const { cliente, nome, rg, telefone } = req.body;
 
             if (!cliente || !nome || !rg || !telefone) {
                 return res.status(500).send('Informações não enviadas para o servidor');

@@ -1,10 +1,11 @@
 const Estacionamento = require('../models/Estacionamento');
+const Vaga = require('../models/Vaga');
 const mongoose = require('mongoose');
 
 module.exports = {
     async create(req, res) {
         try {
-            const { nome, endereco, funcionarios, dono, numeroDeVagas, vagas } = req.body;
+            const { nome, endereco, funcionarios, dono, numeroDeVagas } = req.body;
 
             if (!nome || !endereco || !dono || !numeroDeVagas) {
                 return res.status(500).send('Informações não enviadas para o servidor');
@@ -16,9 +17,23 @@ module.exports = {
                 funcionarios: funcionarios ? funcionarios.map(f => new mongoose.Types.ObjectId(f)) : [],
                 dono: new mongoose.Types.ObjectId(dono),
                 numeroDeVagas: numeroDeVagas,
-                vagas: vagas ? vagas.map(v => new mongoose.Types.ObjectId(v)) : []
+                vagas: []
             })
 
+            let vagas = [];
+
+            for (let index = 0; index < numeroDeVagas; index++) {
+                let vaga = await Vaga.create({
+                    codigo: '123',
+                    estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
+                })
+
+                vagas.push(vaga);
+            }
+
+            estacionamento.vagas = vagas;
+
+            await estacionamento.save();
             estacionamento = await estacionamento.populate('funcionarios').populate('dono').execPopulate();
 
             return res.json(estacionamento);
