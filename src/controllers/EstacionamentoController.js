@@ -1,7 +1,6 @@
 const Estacionamento = require('../models/Estacionamento');
 const Vaga = require('../models/Vaga');
 const mongoose = require('mongoose');
-const randomstring = require("randomstring");
 const utils = require('../utils');
 
 module.exports = {
@@ -23,14 +22,11 @@ module.exports = {
             })
 
             let vagas = [];
-            let loops = utils.generateArrayNumber(numeroDeVagas);
+            let loops = utils.gerarArrayDeObjetos(numeroDeVagas);
 
             for (const loop of loops) {
                 let vaga = await Vaga.create({
-                    codigo: randomstring.generate({
-                        length: 4,
-                        charset: '123456789ABCDEF'
-                    }),
+                    codigo: utils.gerarHahcode(),
                     estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
                 })
 
@@ -86,14 +82,11 @@ module.exports = {
 
             if (numeroDeVagas > esctacionamentoAntigo.numeroDeVagas){
                 let novasVagas = numeroDeVagas - esctacionamentoAntigo.numeroDeVagas
-                let loops = utils.generateArrayNumber(novasVagas);
+                let loops = utils.gerarArrayDeObjetos(novasVagas);
 
                 for (const loop of loops) {
                     let vaga = await Vaga.create({
-                        codigo: randomstring.generate({
-                            length: 4,
-                            charset: '123456789ABCDEF'
-                        }),
+                        codigo: utils.gerarHahcode(),
                         estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
                     })
 
