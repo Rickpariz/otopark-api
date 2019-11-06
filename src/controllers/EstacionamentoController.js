@@ -75,6 +75,23 @@ module.exports = {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
+            let esctacionamentoAntigo = await Esctacionamento.findOne({_id: new mongoose.Types.ObjectId(estacionamento)}).exec();
+            let vagas = [];
+
+            if (numeroDeVagas > esctacionamentoAntigo.numeroDeVagas){
+              let novasVagas = numeroDeVagas - esctacionamentoAntigo.numeroDeVagas
+              
+
+                for (let index = 1; index < novasVagas; index++) {
+                    let vaga = await Vaga.create({
+                    codigo: '#' + index,
+                    estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
+                })
+
+                vagas.push(vaga);
+            }
+
+            }
             let estacionamentoAtualizado = await Estacionamento.findOneAndUpdate({
                 _id: new mongoose.Types.ObjectId(estacionamento)
             }, {
