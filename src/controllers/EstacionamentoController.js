@@ -22,9 +22,9 @@ module.exports = {
 
             let vagas = [];
 
-            for (let index = 0; index < numeroDeVagas; index++) {
+            for (let index = 1; index < numeroDeVagas; index++) {
                 let vaga = await Vaga.create({
-                    codigo: '123',
+                    codigo: '#' + index,
                     estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
                 })
 
