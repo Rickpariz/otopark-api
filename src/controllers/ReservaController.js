@@ -27,7 +27,8 @@ module.exports = {
                 $set: {
                     placa,
                     modelo,
-                    cor
+                    cor,
+                    cliente: cliente._id
                 }
             }, { new: true, upsert: true })
 
