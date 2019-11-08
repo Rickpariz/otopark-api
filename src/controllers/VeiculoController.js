@@ -10,7 +10,7 @@ module.exports = {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
-            const veiculo = await Veiculo.create({
+            let veiculo = await Veiculo.create({
                 placa,
                 modelo,
                 estacionamento: new mongoose.Types.ObjectId(estacionamento),

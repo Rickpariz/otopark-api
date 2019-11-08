@@ -1,25 +1,49 @@
 const mongoose = require('mongoose');
 const Reserva = require('../models/Reserva');
+const Cliente = require('../models/Cliente');
+const Vaga = require('../models/Vaga');
+const Veiculo = require('../models/Veiculo');
+
 const moment = require('moment');
 
 module.exports = {
     async create(req, res) {
         try {
-            const { estacionamento, cliente, vaga, veiculo, tipo } = req.body;
+            const { rg, nome, telefone, placa, modelo, cor, tipo, estacionamento, vaga } = req.body;
 
-            if (!veiculo || !vaga || !estacionamento || !tipo || !cliente) {
+            if (!rg || !nome || !telefone || !placa || !modelo || !cor || !tipo || !estacionamento || !vaga) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
-            const reserva = await Reserva.create({
+            let cliente = await Cliente.findOneAndUpdate({rg}, {
+                $set: {
+                    rg,
+                    nome,
+                    telefone
+                }
+            }, { new: true, upsert: true }).exec();
+
+            let veiculo = await Veiculo.findOneAndUpdate({ placa }, {
+                $set: {
+                    placa,
+                    modelo,
+                    cor
+                }
+            }, { new: true, upsert: true })
+
+            await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(vaga)}, { $set: {
+                status: false
+            }}).exec();
+
+            let reserva = await Reserva.create({
                 vaga: new mongoose.Types.ObjectId(vaga),
                 tipo: new mongoose.Types.ObjectId(tipo),
                 estacionamento: new mongoose.Types.ObjectId(estacionamento),
-                cliente: new mongoose.Types.ObjectId(cliente),
-                veiculo: new mongoose.Types.ObjectId(veiculo),
+                cliente: cliente._id,
+                veiculo: veiculo._id,
                 entrada: moment().toDate()
             });
-
+            
             reserva = await reserva.populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')

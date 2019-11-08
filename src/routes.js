@@ -7,7 +7,7 @@ const VeiculoController = require('./controllers/VeiculoController');
 const VagaController = require('./controllers/VagaController');
 const TabelaDePrecoController = require('./controllers/TabelaDePrecoController');
 const SistemaController = require('./controllers/SistemaController');
-
+const ReservaController = require('./controllers/ReservaController');
 // Rotas de Usuários
 routes.get('/usuarios/:usuario', UsuarioController.getOne)
 routes.route('/usuarios')
@@ -48,12 +48,20 @@ routes.route('/vagas')
     .put(VagaController.update)
 
 
-// Rotas de Vagas
+// Rotas de tabelas de preço
 routes.get('/tabeladeprecos/:tabeladepreco', TabelaDePrecoController.getOne)
 routes.route('/tabeladeprecos')
     .get(TabelaDePrecoController.getAll)
     .post(TabelaDePrecoController.create)
     .put(TabelaDePrecoController.update)
+
+
+// Rotas de reservas
+routes.get('/reservas/:reserva', ReservaController.getOne)
+routes.route('/reservas')
+    .get(ReservaController.getAll)
+    .post(ReservaController.create)
+    .put(ReservaController.update)
 
 // rotas do Sistema
 routes.post('/system/login', SistemaController.login)
