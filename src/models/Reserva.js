@@ -30,12 +30,7 @@ const ReservaSchema = new Schema({
         type: Date,
         required: true
     },
-    saida: { type: Date },
-    tipo: {
-        type: Schema.Types.ObjectId,
-        ref: 'tabeladeprecos',
-        required: true
-    }
+    saida: { type: Date }
 }, { timestamps: true });
 
 module.exports = model('reservas', ReservaSchema);

@@ -12,7 +12,7 @@ module.exports = {
 
         const usuario = await Usuario.findOne({ email }).exec();
 
-        if(!bcrypt.compareSync(senha, usuario.senha)){
+        if(!usuario || !bcrypt.compareSync(senha, usuario.senha)){
             return res.status(500).send('Email ou senha inválidos');
         }
 

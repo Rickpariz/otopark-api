@@ -9,26 +9,28 @@ const moment = require('moment');
 module.exports = {
     async create(req, res) {
         try {
-            const { rg, nome, telefone, placa, modelo, cor, tipo, estacionamento, vaga } = req.body;
+            const { rg, nome, telefone, placa, modelo, cor, estacionamento, vaga } = req.body;
 
-            if (!rg || !nome || !telefone || !placa || !modelo || !cor || !tipo || !estacionamento || !vaga) {
+            if (!nome || !placa || !estacionamento || !vaga) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
             let cliente = await Cliente.findOneAndUpdate({rg}, {
                 $set: {
-                    rg,
+                    rg: rg ? rg : '',
                     nome,
-                    telefone
+                    telefone: telefone ? telefone : '',
+                    estacionamento: new mongoose.Types.ObjectId(estacionamento)
                 }
             }, { new: true, upsert: true }).exec();
 
             let veiculo = await Veiculo.findOneAndUpdate({ placa }, {
                 $set: {
                     placa,
-                    modelo,
-                    cor,
-                    cliente: cliente._id
+                    modelo: modelo ? modelo : '',
+                    cor: cor ? cor : '464444',
+                    cliente: cliente._id,
+                    estacionamento: new mongoose.Types.ObjectId(estacionamento)
                 }
             }, { new: true, upsert: true })
 
@@ -38,7 +40,6 @@ module.exports = {
 
             let reserva = await Reserva.create({
                 vaga: new mongoose.Types.ObjectId(vaga),
-                tipo: new mongoose.Types.ObjectId(tipo),
                 estacionamento: new mongoose.Types.ObjectId(estacionamento),
                 cliente: cliente._id,
                 veiculo: veiculo._id,
