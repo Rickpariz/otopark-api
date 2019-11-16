@@ -4,7 +4,8 @@ const ReservaSchema = new Schema({
     status: {
         type: String, // Aberta / Feachada / Cancelada
         required: true,
-        default: 'Aberta'
+        default: 'Aberta',
+        enum: ['Aberta', 'Fechada', 'Cancelada']
     },
     cliente: {
         type: Schema.Types.ObjectId,
@@ -30,7 +31,11 @@ const ReservaSchema = new Schema({
         type: Date,
         required: true
     },
-    saida: { type: Date }
+    saida: { type: Date },
+    tipo: {
+        type: String,
+        enum: ['Avulso', 'Diario', 'Mensal']
+    }
 }, { timestamps: true });
 
 module.exports = model('reservas', ReservaSchema);

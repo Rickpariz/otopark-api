@@ -17,6 +17,7 @@ routes.route('/usuarios')
 
 
 // Rotas de Estacionamento
+routes.put('/estacionamento/atualizarConfiguracoesClienteAvulso', EstacionamentoController.atualizarConfiguracoesClienteAvulso)
 routes.get('/estacionamentos/:estacionamento', EstacionamentoController.getOne)
 routes.route('/estacionamentos')
     .get(EstacionamentoController.getAll)

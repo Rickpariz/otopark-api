@@ -24,6 +24,17 @@ const EstacionamentoSchema = new Schema({
     status: {
         type: Boolean,
         default: true
+    },
+    avulso: {
+        horaFixa: { type: Number },
+        horaExcedente: { type: Number },
+        tolerancia: { type: Number }
+    },
+    diario: {
+        tempo: { type: Number },
+        precoDiaria: { type: Number },
+        horaExcedente: { type: Number },
+        tolerancia: { type: Number }
     }
 }, { timestamps: true });
 

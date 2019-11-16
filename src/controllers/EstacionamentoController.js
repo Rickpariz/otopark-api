@@ -112,5 +112,34 @@ module.exports = {
 
             return res.json(estacionamentoAtualizado);
         } catch (err) { res.status(500).send(err.message) }
+    },
+
+    async atualizarConfiguracoesClienteAvulso(req, res){
+        try {
+            const { 
+                horaFixa,
+                horaExcedente,
+                tolerancia,
+                estacionamento
+            } = req.body;
+
+            if(!horaFixa || !horaExcedente ||  !estacionamento) {
+                return res.status(500).send('Informações não enviadas para o servidor');
+            }
+
+            let estacionamentoAtualizado = await Estacionamento.findOneAndUpdate({
+                _id: new mongoose.Types.ObjectId(estacionamento)
+            }, {
+                $set: {
+                    avulso: {
+                        horaFixa,
+                        horaExcedente,
+                        tolerancia
+                    }
+                }
+            }, { new: true }).populate('funcionarios').populate('dono').exec();
+
+            return res.json(estacionamentoAtualizado);
+        } catch(err){ res.status(500).send(err.message) }
     }
 }
