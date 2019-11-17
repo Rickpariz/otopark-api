@@ -9,9 +9,9 @@ const moment = require('moment');
 module.exports = {
     async create(req, res) {
         try {
-            const { rg, nome, telefone, placa, modelo, cor, estacionamento, vaga } = req.body;
+            const { rg, nome, telefone, placa, modelo, cor, estacionamento, vaga, tipo } = req.body;
 
-            if (!nome || !placa || !estacionamento || !vaga) {
+            if (!nome || !placa || !estacionamento || !vaga, !tipo) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
@@ -43,13 +43,14 @@ module.exports = {
                 estacionamento: new mongoose.Types.ObjectId(estacionamento),
                 cliente: cliente._id,
                 veiculo: veiculo._id,
-                entrada: moment().toDate()
+                entrada: moment().toDate(),
+                tipo
             });
             
             reserva = await reserva.populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')
-                .populate('tipo').execPopulate();
+                .execPopulate();
 
             return res.json(reserva);
         } catch (err) { res.status(500).send(err.message) }
@@ -61,7 +62,7 @@ module.exports = {
             const reservas = await Reserva.find().populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')
-                .populate('tipo').exec();
+                .exec();
             return res.json(reservas);
 
         } catch (err) { res.status(500).send(err.message) }
@@ -78,7 +79,7 @@ module.exports = {
             const reservaEncontrada = await Reserva.findOne({ _id: new mongoose.Types.ObjectId(reserva) }).populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')
-                .populate('tipo').exec();
+                .exec();
             return res.json(reservaEncontrada);
 
         } catch (err) { res.status(500).send(err.message) }
@@ -108,7 +109,7 @@ module.exports = {
                 }, { new: true })
                 .populate('vaga')
                 .populate('veiculo')
-                .populate('tipo').exec();
+                .exec();
 
             return res.json(reservaAtualizada);
         } catch (err) { res.status(500).send(err.message) }

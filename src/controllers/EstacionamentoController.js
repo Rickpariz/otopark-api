@@ -134,7 +134,38 @@ module.exports = {
                     avulso: {
                         horaFixa,
                         horaExcedente,
-                        tolerancia
+                        tolerancia: tolerancia || 0
+                    }
+                }
+            }, { new: true }).populate('funcionarios').populate('dono').exec();
+
+            return res.json(estacionamentoAtualizado);
+        } catch(err){ res.status(500).send(err.message) }
+    },
+    
+    async atualizarConfiguracoesClienteDiario(req, res){
+        try {
+            const { 
+                tempo,
+                precoDiaria,
+                horaExcedente,
+                tolerancia,
+                estacionamento
+            } = req.body;
+
+            if(!tempo || !precoDiaria || !horaExcedente ||  !estacionamento) {
+                return res.status(500).send('Informações não enviadas para o servidor');
+            }
+
+            let estacionamentoAtualizado = await Estacionamento.findOneAndUpdate({
+                _id: new mongoose.Types.ObjectId(estacionamento)
+            }, {
+                $set: {
+                    diario: {
+                        tempo,
+                        precoDiaria,
+                        horaExcedente,
+                        tolerancia: tolerancia || 0
                     }
                 }
             }, { new: true }).populate('funcionarios').populate('dono').exec();
