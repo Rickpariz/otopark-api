@@ -34,7 +34,7 @@ const ReservaSchema = new Schema({
     saida: { type: Date },
     tipo: {
         type: String,
-        enum: ['Avulsa', 'Diaria', 'Mensal'],
+        enum: ['Avulsa', 'Diaria', 'sMensal'],
         default: 'Avulsa',
     }
 }, { timestamps: true });
