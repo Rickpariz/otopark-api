@@ -36,7 +36,8 @@ const ReservaSchema = new Schema({
         type: String,
         enum: ['Avulsa', 'Diaria', 'sMensal'],
         default: 'Avulsa',
-    }
+    },
+    preco: { type: Number }
 }, { timestamps: true });
 
 module.exports = model('reservas', ReservaSchema);

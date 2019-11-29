@@ -3,8 +3,8 @@ const Reserva = require('../models/Reserva');
 const Cliente = require('../models/Cliente');
 const Vaga = require('../models/Vaga');
 const Veiculo = require('../models/Veiculo');
-
-const moment = require('moment');
+const { RESERVAS_STATUS } = require('../helpers/reservas');
+const moment = require('../helpers/moment');
 
 module.exports = {
     async create(req, res) {
@@ -15,7 +15,7 @@ module.exports = {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
-            let cliente = await Cliente.findOneAndUpdate({rg}, {
+            let cliente = await Cliente.findOneAndUpdate({ rg }, {
                 $set: {
                     rg: rg ? rg : '',
                     nome,
@@ -34,9 +34,11 @@ module.exports = {
                 }
             }, { new: true, upsert: true })
 
-            await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(vaga)}, { $set: {
-                status: false
-            }}).exec();
+            await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(vaga) }, {
+                $set: {
+                    status: false
+                }
+            }).exec();
 
             let reserva = await Reserva.create({
                 vaga: new mongoose.Types.ObjectId(vaga),
@@ -46,7 +48,7 @@ module.exports = {
                 entrada: moment().toDate(),
                 tipo
             });
-            
+
             reserva = await reserva.populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')
@@ -58,6 +60,11 @@ module.exports = {
 
     async getAll(req, res) {
         try {
+            const { filters } = req.query;
+            let query = {};
+
+            if (filters && filters.estacionamento) query['estacionamento'] = new mongoose.Types.ObjectId(filters.estacionamento);
+            if (filters && filters.status) query['status'] = filters.status;
 
             const reservas = await Reserva.find().populate('cliente')
                 .populate('vaga')
@@ -112,6 +119,36 @@ module.exports = {
                 .exec();
 
             return res.json(reservaAtualizada);
+        } catch (err) { res.status(500).send(err.message) }
+    },
+
+    async finalizarReserva(req, res) {
+        try {
+            const { reserva, preco } = req.body
+
+            let reservaAtualizada = await Reserva.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reserva)}, {
+                $set: {
+                    status: RESERVAS_STATUS.FECHADA,
+                    saida: moment().toDate(),
+                    preco: parseFloat(preco).toFixed(2)
+                }
+            }, { new: true })
+            .exec();
+                
+            
+            let vaga = await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reservaAtualizada.vaga) }, {
+                $set: {
+                    status: true
+                }
+            }, { new: true }).exec();
+
+            reservaAtualizada = await reservaAtualizada.populate('cliente')
+                .populate('vaga')
+                .populate('veiculo')
+                .execPopulate();
+
+            return res.json(reservaAtualizada)
+
         } catch (err) { res.status(500).send(err.message) }
     }
 }

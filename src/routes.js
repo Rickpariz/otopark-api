@@ -61,6 +61,7 @@ routes.route('/tabeladeprecos')
 
 // Rotas de reservas
 routes.get('/reservas/:reserva', ReservaController.getOne)
+routes.post('/reservas/finalizarReserva', ReservaController.finalizarReserva)
 routes.route('/reservas')
     .get(ReservaController.getAll)
     .post(ReservaController.create)
