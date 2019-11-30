@@ -66,7 +66,7 @@ module.exports = {
             if (filters && filters.estacionamento) query['estacionamento'] = new mongoose.Types.ObjectId(filters.estacionamento);
             if (filters && filters.status) query['status'] = filters.status;
 
-            const reservas = await Reserva.find().populate('cliente')
+            const reservas = await Reserva.find(query).populate('cliente')
                 .populate('vaga')
                 .populate('veiculo')
                 .exec();
@@ -106,7 +106,7 @@ module.exports = {
                     $set: {
                         status,
                         vaga: new mongoose.Types.ObjectId(vaga),
-                        tipo: new mongoose.Types.ObjectId(tipo),
+                        tipo,
                         estacionamento: new mongoose.Types.ObjectId(estacionamento),
                         cliente: new mongoose.Types.ObjectId(cliente),
                         veiculo: new mongoose.Types.ObjectId(veiculo),
