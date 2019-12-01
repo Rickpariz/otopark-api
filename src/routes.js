@@ -66,6 +66,7 @@ routes.route('/reservas')
     .get(ReservaController.getAll)
     .post(ReservaController.create)
     .put(ReservaController.update)
+    .delete(ReservaController.delete)
 
 // rotas do Sistema
 routes.post('/system/login', SistemaController.login)

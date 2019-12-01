@@ -96,7 +96,7 @@ module.exports = {
         try {
             const { reserva, estacionamento, cliente, vaga, veiculo, tipo, entrada, saida, status } = req.body;
 
-            if (!reseva || !veiculo || !vaga || !estacionamento || !tipo || !cliente || !entrada || !saida || !status) {
+            if (!reserva || !veiculo || !vaga || !estacionamento || !tipo || !cliente || !entrada || !saida || !status) {
                 return res.status(500).send('Informações não enviadas para o servidor');
             }
 
@@ -122,21 +122,56 @@ module.exports = {
         } catch (err) { res.status(500).send(err.message) }
     },
 
+    async delete(req, res) {
+        try {
+            const { reserva } = req.body;
+
+            if (!reserva) {
+                return res.status(500).send('Informações não enviadas para o servidor');
+            }
+
+            let reservaEncontrada = await Reserva.findOne({ _id: new mongoose.Types.ObjectId(reserva) }).exec();
+
+            if (!reservaEncontrada) {
+                return res.status(500).send('Reserva não encontrada');
+            }
+
+            // deixando vaga disponivel 
+            let vaga = await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reservaEncontrada.vaga) }, {
+                $set: {
+                    status: true
+                }
+            }, { new: true }).exec();
+
+            await Reserva.deleteOne({ _id: new mongoose.Types.ObjectId(reserva) }).exec();
+
+            return res.json({
+                reserva,
+                vaga
+            });
+
+        } catch (err) { res.status(500).send(err.message) }
+    },
+
     async finalizarReserva(req, res) {
         try {
             const { reserva, preco } = req.body
 
-            let reservaAtualizada = await Reserva.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reserva)}, {
+            if (!reserva || !preco) {
+                return res.status(500).send('Informações não enviadas para o servidor');
+            }
+
+            let reservaAtualizada = await Reserva.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reserva) }, {
                 $set: {
                     status: RESERVAS_STATUS.FECHADA,
                     saida: moment().toDate(),
                     preco: parseFloat(preco).toFixed(2)
                 }
             }, { new: true })
-            .exec();
-                
-            
-            let vaga = await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reservaAtualizada.vaga) }, {
+                .exec();
+
+
+            await Vaga.findOneAndUpdate({ _id: new mongoose.Types.ObjectId(reservaAtualizada.vaga) }, {
                 $set: {
                     status: true
                 }
