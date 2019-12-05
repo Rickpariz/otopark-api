@@ -87,6 +87,9 @@ module.exports = {
                 .populate('vaga')
                 .populate('veiculo')
                 .exec();
+
+            if(!reservaEncontrada) return res.status(412).send('Reserva não encontrada');
+            
             return res.json(reservaEncontrada);
 
         } catch (err) { res.status(500).send(err.message) }
