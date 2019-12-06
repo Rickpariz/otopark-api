@@ -87,7 +87,7 @@ module.exports = {
                 for (const loop of loops) {
                     let vaga = await Vaga.create({
                         codigo: utils.gerarHahcode(),
-                        estacionamento:  new mongoose.Types.ObjectId(estacionamento._id)
+                        estacionamento:  new mongoose.Types.ObjectId(estacionamento)
                     })
 
                     vagasList.push(new mongoose.Types.ObjectId(vaga._id));
