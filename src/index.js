@@ -4,7 +4,14 @@ const mongoose = require('mongoose');
 const routes = require('./routes');
 const cors = require('cors');
 
-mongoose.connect('mongodb+srv://rickpariz:rickpariz@otopark-xejxo.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
+mongoose.connect('mongodb+srv://rickpariz:rickpariz@otopark-xejxo.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+    .then(data => {
+        console.log("CONECTADO COM SUCESSO - OTOPARK");
+    })
+    .catch(err => {
+        console.log("ERRO AO CONECTAR MONGODB")
+        console.log(err)
+    })
 
 server.use(cors({credentials: true, origin: true}));
 
