@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const routes = require('./routes');
 const cors = require('cors');
 
-mongoose.connect('mongodb+srv://rickpariz:rickpariz@rickpariz-xejxo.gcp.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
+mongoose.connect('mongodb+srv://rickpariz:rickpariz@otopark-xejxo.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
 
 server.use(cors({credentials: true, origin: true}));
 
