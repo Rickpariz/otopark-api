@@ -16,6 +16,10 @@ mongoose.connect('mongodb+srv://rickpariz:rickpariz@otopark-xejxo.mongodb.net/te
 server.use(cors({credentials: true, origin: true}));
 
 server.use(express.json());
+server.use((req, res, next) => {
+    console.log(req.originalUrl);
+    next();
+})
 server.use(routes);
 
 server.listen(process.env.PORT || 3003);

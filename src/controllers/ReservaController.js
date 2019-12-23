@@ -88,8 +88,8 @@ module.exports = {
                 .populate('veiculo')
                 .exec();
 
-            if(!reservaEncontrada) return res.status(412).send('Reserva não encontrada');
-            
+            if (!reservaEncontrada) return res.status(412).send('Reserva não encontrada');
+
             return res.json(reservaEncontrada);
 
         } catch (err) { res.status(500).send(err.message) }
@@ -187,6 +187,23 @@ module.exports = {
 
             return res.json(reservaAtualizada)
 
+        } catch (err) { res.status(500).send(err.message) }
+    },
+
+    async buscarReservasParaComprovanteDigital(req, res) {
+        try {
+            const { rg, estacionamento } = req.query;
+
+            if (!rg) return res.status(500).send('Informações não enviadas para o servidor');
+
+            const cliente = await Cliente.findOne({ rg }).lean().exec();
+
+            if (!cliente) return res.status(412).send('Verifique o RG novamente, usuário não encontrado.');
+
+            const reservas = await Reserva.find({ cliente: new mongoose.Types.ObjectId(cliente._id), estacionamento: new mongoose.Types.ObjectId(estacionamento) })
+                                .populate('cliente').populate('veiculo').populate('vaga').sort({entrada: -1}).lean().exec();
+
+            return res.json(reservas);
         } catch (err) { res.status(500).send(err.message) }
     }
 }

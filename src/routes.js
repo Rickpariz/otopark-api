@@ -60,6 +60,7 @@ routes.route('/tabeladeprecos')
 
 
 // Rotas de reservas
+routes.get('/reservas/comprovantedigital', ReservaController.buscarReservasParaComprovanteDigital)
 routes.get('/reservas/:reserva', ReservaController.getOne)
 routes.post('/reservas/finalizarReserva', ReservaController.finalizarReserva)
 routes.route('/reservas')
