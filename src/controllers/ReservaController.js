@@ -61,16 +61,24 @@ module.exports = {
     async getAll(req, res) {
         try {
             const { filters } = req.query;
+            const { estacionamento, status, pagination } = filters || {};
+            const { offset, limit } = pagination || {};
+            let isPagination = false; 
             let query = {};
 
-            if (filters && filters.estacionamento) query['estacionamento'] = new mongoose.Types.ObjectId(filters.estacionamento);
-            if (filters && filters.status) query['status'] = filters.status;
+            if (estacionamento) query['estacionamento'] = new mongoose.Types.ObjectId(filters.estacionamento);
+            if (status) query['status'] = filters.status;
+            if (pagination && limit && offset) isPagination = true;
 
-            const reservas = await Reserva.find(query).populate('cliente')
-                .populate('vaga')
-                .populate('veiculo')
-                .exec();
-            return res.json(reservas);
+            const response = await Reserva.paginate(query, {
+                pagination: isPagination,
+                populate: ['cliente', 'vaga', 'veiculo'],
+                lean: true,
+                offset: offset || 0,
+                limit: limit || 9999
+            });
+
+            return res.json(response);
 
         } catch (err) { res.status(500).send(err.message) }
     },

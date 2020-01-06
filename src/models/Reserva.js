@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const ReservaSchema = new Schema({
     status: {
@@ -39,5 +40,7 @@ const ReservaSchema = new Schema({
     },
     preco: { type: Number }
 }, { timestamps: true });
+
+ReservaSchema.plugin(mongoosePaginate);
 
 module.exports = model('reservas', ReservaSchema);
