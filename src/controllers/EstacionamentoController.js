@@ -45,9 +45,17 @@ module.exports = {
     async getAll(req, res) {
         try {
             const { filters } = req.query;
-            let query = {};
-            
-            if(filters && filters.dono) query['dono'] = new mongoose.Types.ObjectId(filters.dono);
+            let query = { $or: []};
+
+            if(filters && filters.usuario) {
+                query["$or"].push({
+                    dono: new mongoose.Types.ObjectId(filters.usuario)
+                });
+                
+                query["$or"].push({
+                    funcionarios: new mongoose.Types.ObjectId(filters.usuario)
+                });
+            }
 
             const estacionamentos = await Estacionamento.find(query).populate('funcionarios').populate('dono').exec();
             return res.json(estacionamentos);

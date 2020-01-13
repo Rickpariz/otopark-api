@@ -1,4 +1,6 @@
 const Usuario = require('../models/Usuario');
+const EstacionamentoCollection = require("../models/Estacionamento");
+
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const mongoose = require('mongoose');
@@ -6,7 +8,7 @@ const mongoose = require('mongoose');
 module.exports = {
     async create(req, res) {
         try {
-            const { nome, email, senha, tipo } = req.body;
+            const { nome, email, senha, tipo, estacionamento } = req.body;
 
             if (!nome || !email || !senha || !tipo) {
                 return res.status(500).send('Informações não enviadas para o servidor');
@@ -21,7 +23,14 @@ module.exports = {
                 tipo
             });
 
+            if(tipo == "Dono") return res.json(usuario);
+
+            await EstacionamentoCollection.updateOne({ _id: new mongoose.Types.ObjectId(estacionamento)}, {$push: {
+                'funcionarios': new mongoose.Types.ObjectId(usuario._id)
+            }});
+
             return res.json(usuario);
+            
         } catch (err) { res.status(500).send(err.message) }
     },
 
